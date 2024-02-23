@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools"] #, "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+#[tool.setuptools_scm]
+#version_file = "libdd/_version.py"
+
+[project]
+name = "libdd"
+authors = [
+    {name = "Ann Holmes", email="ann.holmes@vumc.org"}
+]
+description = "Data Dictionary Library"
+readme = "README.md"
+requires-python = ">3.7"
+keywords = ["Research Data", "Data Dictionary"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+]
+dependencies = ["PyYAML",
+                "rich",
+                "pandas"
+                ]
+
+dynamic = ["version"]
+
+[tool.setuptools.packages.find]
+where = ["src"]  # list of folders that contain the packages (["."] by default)
+
+
+[project.scripts]
+summarize_csv = "libdd.scripts.summarize_csv:summarize_csv"
