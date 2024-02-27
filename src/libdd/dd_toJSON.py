@@ -1,10 +1,18 @@
 from collections import defaultdict
 
+_missingRepresentation = 0
+def missingRepresentation(msng = None):
+    global _missingRepresentation
+    if msng is not None:
+        _missingRepresentation = msng
+    return _missingRepresentation
+
+
 def ddtoJSON(ddfile):
    
    di = defaultdict(dict)
 
-   df2 = ddfile.fillna(0)
+   df2 = ddfile.fillna(missingRepresentation())
    for i, row in df2.iterrows():
         if df2.loc[i, 'allowed'] != 0:
             df2.loc[i, 'allowed'] = df2.loc[i, 'allowed'].split(";")
