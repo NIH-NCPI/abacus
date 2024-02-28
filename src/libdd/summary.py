@@ -60,8 +60,47 @@ Sex:
   Unknown: 0
 '''
 import yaml 
+import statistics
 example_summary = yaml.safe_load(dummyoutput)
 
 def gensummary(datadictionary, datasetfile):
-    # TBD actually do the summary :) 
-    return example_summary
+    
+    # Figure out which columns are factor-like variables with allowed values
+    factorCols = []
+    numberCols = [] # have to do something about integer and number values
+    # Have to do something about string type data such as id's
+    for name in datadictionary:
+       if 'allowed' in datadictionary[name]:
+          factorCols.append(name)
+
+
+    dictionary = {}
+
+    for col in datasetfile:
+        for col in factorCols:
+            elements = datasetfile[col].value_counts(dropna=False).to_dict()
+            dictionary[col]=elements
+
+            # Fill out the unused possible values with 0 counts
+            setA = list(datadictionary[col]['allowed'])
+            setB = list(datasetfile[col].unique())
+            difAB = list(set(setA).difference(setB))
+
+            if difAB != []:
+                for p in range(len(difAB)):
+                    dictionary[col][difAB[p]] = 0
+
+            dictionary[col]['Total Count of Values'] = sum(dictionary[col].values())
+
+    for col in datasetfile: 
+        for col in numberCols:
+            dictionary[col]['Min'] = min(datasetfile[col])
+            dictionary[col]['Max'] = max(datasetfile[col])
+            dictionary[col]['Median'] = statistics.median(datasetfile[col])
+
+    # Write to YAML (see https://docs.google.com/document/d/1zHsyAo6d-BkjExUi-gf_MJ7zoWDcVU_GG4YlH5A1pBs/edit?usp=sharing)
+
+    with open('C:/Users/ann14/dev/INCLUDE/libdd/data/summary_dat.yaml', 'w') as f:
+        yaml.dump(dictionary, f)
+
+    # print(yaml.dump(dictionary))
