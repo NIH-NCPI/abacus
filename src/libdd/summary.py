@@ -67,7 +67,8 @@ def gensummary(datadictionary, datasetfile):
     
     # Figure out which columns are factor-like variables with allowed values
     factorCols = []
-    numberCols = []
+    numberCols = [] # have to do something about integer and number values
+    # Have to do something about string type data such as id's
     for name in datadictionary:
        if 'allowed' in datadictionary[name]:
           factorCols.append(name)
@@ -97,9 +98,9 @@ def gensummary(datadictionary, datasetfile):
             dictionary[col]['Max'] = max(datasetfile[col])
             dictionary[col]['Median'] = statistics.median(datasetfile[col])
 
-    # Write to YAML
+    # Write to YAML (see https://docs.google.com/document/d/1zHsyAo6d-BkjExUi-gf_MJ7zoWDcVU_GG4YlH5A1pBs/edit?usp=sharing)
 
     with open('C:/Users/ann14/dev/INCLUDE/libdd/data/summary_dat.yaml', 'w') as f:
         yaml.dump(dictionary, f)
 
-    print(yaml.dump(dictionary))
+    # print(yaml.dump(dictionary))
