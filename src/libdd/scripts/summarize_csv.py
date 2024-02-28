@@ -1,13 +1,20 @@
-from argparse import (ArgumentParser, FileType)
-from rich import print
-import pandas
-from libdd.dd_toJSON import ddtoJSON
-from libdd.clean_dd import cleanNullTerms
-from libdd.summary import gensummary
+from argparse import (ArgumentParser, FileType) # for taking terminal arguments
+from rich import print # for pretty terminal print formatting
+import pandas # for reading in csv files
+from libdd.dd_toJSON import ddtoJSON # related function to create JSON/Dictionary object
+from libdd.clean_dd import cleanNullTerms # related function to clean data dictionary of missing data
+from libdd.summary import gensummary # related function to summarize data based on input ddfile and dtfile
 
 def summarize_csv(args=None):
-    """Based on user input, load the data dictionary and data set file into memory and summarize."""
+    '''Based on user input, load the data dictionary and data set file into memory and summarize.
+    dataDictionary - a csv format file representing how the data are represented in an accompanying data file
 
+    dataSet - a csv format file of collected data where columns are defined in the data dictionary (it is
+    assumed that the data file already conforms to the data dictionary so this series of scripts can accurately summarize
+    the contents based on data types)
+    
+    '''
+    
     parser = ArgumentParser(prog='Application', description='pass the arguments to open a file')
 
     parser.add_argument('-dd', '--dataDictionary', type=FileType('rt'), required=True, help="Data Dictionary file name")
@@ -25,8 +32,6 @@ def summarize_csv(args=None):
 
     # It is expected that the data set file conforms to the data dictionary defined as ddfile
     dtfile = pandas.read_csv(user_args.dataSet.name)
-
-    # print(ddJSON_clean)
 
     gensummary(ddJSON_clean, dtfile)
 

@@ -1,4 +1,15 @@
-from collections import defaultdict
+''' Convert CSV to Dictionary/JSON Format
+Data dictionary as csv [read_csv(ddfile)] -> Data dictionary to JSON [ddtoJSON(ddfile)] -> 
+Data Dictionary clean null terms [cleanNullTerms(ddJSON)]
+
+input argument ddfile - the pandas representation of the data dictionary after loading it in 
+using read_csv()
+
+missingRepresentation - 0 is chosen as a placeholder for NA/None/null values imported in the
+data dictionary pandas object.
+
+'''
+from collections import defaultdict # for creating default empty dictionary objects
 
 _missingRepresentation = 0
 def missingRepresentation(msng = None):
@@ -10,19 +21,14 @@ def missingRepresentation(msng = None):
 
 def ddtoJSON(ddfile):
    
-   di = defaultdict(dict)
+   dictionaryObject = defaultdict(dict)
 
-   df2 = ddfile.fillna(missingRepresentation())
-   for i, row in df2.iterrows():
-        if df2.loc[i, 'allowed'] != 0:
-            df2.loc[i, 'allowed'] = df2.loc[i, 'allowed'].split(";")
-            di[row.name] = row.to_dict()
+   ddfileReplaceMissing = ddfile.fillna(missingRepresentation())
+   for i, row in ddfileReplaceMissing.iterrows():
+        if ddfileReplaceMissing.loc[i, 'allowed'] != 0:
+            ddfileReplaceMissing.loc[i, 'allowed'] = ddfileReplaceMissing.loc[i, 'allowed'].split(";")
+            dictionaryObject[row.name] = row.to_dict()
         else:
-            di[row.name] = row.to_dict()
+            dictionaryObject[row.name] = row.to_dict()
 
-   return di
-   # prettyDictionary = json.dumps(di_clean, indent = 4)
-
-
-
-
+   return dictionaryObject
