@@ -62,11 +62,12 @@ Sex:
 import yaml 
 import statistics
 import pandas as pd
+import numpy
 
 
 example_summary = yaml.safe_load(dummyoutput)
 
-def gensummary(datadictionary, datasetfile):
+def gensummary(datadictionary, datasetfile, appendToYAML):
     
     # Figure out which columns are factor-like variables with allowed values
     factorCols = []
@@ -92,7 +93,7 @@ def gensummary(datadictionary, datasetfile):
 
     for col in datasetfile:
         if col in factorCols:
-          elements = pd.value_counts(datasetfile[col]).to_dict()
+          elements = datasetfile[col].value_counts().to_dict()
           dictionary[col]=elements
 
           # Fill out the unused possible values with 0 counts
@@ -105,18 +106,29 @@ def gensummary(datadictionary, datasetfile):
                  dictionary[col][difAB[p]] = 0
 
           dictionary[col]['Total Count of Values'] = sum(dictionary[col].values())
+          dictionary[col]['Total Missing Values'] = sum(datasetfile[col].isnull())
 
         elif col in numberCols:
+          dictionary[col] = {}
           dictionary[col]['Min'] = min(datasetfile[col])
+          dictionary[col]['Q1'] = statistics.quantiles(datasetfile[col], n=4)[0] # 25th percentile
+          dictionary[col]['Median'] = statistics.quantiles(datasetfile[col], n=4)[1] # median
+          dictionary[col]['Mean'] = round(statistics.mean(datasetfile[col]),2)
+          dictionary[col]['Q3'] = statistics.quantiles(datasetfile[col], n=4)[2] # 75th percentile
           dictionary[col]['Max'] = max(datasetfile[col])
-          dictionary[col]['Median'] = statistics.median(datasetfile[col])
+          dictionary[col]['Total Count of Values'] = datasetfile[col].shape[0]
+          dictionary[col]['Total Missing Values'] = sum(datasetfile[col].isnull())
 
         elif col in stringCols:
-          dictionary[col]=len(pd.unique(datasetfile[col]))
+          dictionary[col] = {}
+          dictionary[col]['Total Count of Values'] = datasetfile[col].shape[0]
+          dictionary[col]['Total Unique Observations'] = len(pd.unique(datasetfile[col]))
+          dictionary[col]['Total Missing Values'] = sum(datasetfile[col].isnull())
 
     # Write to YAML (see https://docs.google.com/document/d/1zHsyAo6d-BkjExUi-gf_MJ7zoWDcVU_GG4YlH5A1pBs/edit?usp=sharing)
 
-    with open('C:/Users/ann14/dev/INCLUDE/libdd/data/summary_dat.yaml', 'w') as f:
+    fileName = 'summary_dat_' + appendToYAML + '.yaml'
+    with open('C:/Users/ann14/dev/INCLUDE/libdd/data/' + fileName, 'w') as f:
        yaml.dump(dictionary, f)
 
     # print(yaml.dump(dictionary))

@@ -1,7 +1,5 @@
-
-
 def cleanNullTerms(ddJSON):
-   ''' Clean Null Terms from Data Dictionaries
+   """ Clean Null Terms from Data Dictionaries
     Data dictionary as csv [read_csv(ddfile)] -> Data dictionary to JSON [ddtoJSON(ddfile)] -> 
     Data Dictionary clean null terms [cleanNullTerms(ddJSON)]
 
@@ -10,7 +8,7 @@ def cleanNullTerms(ddJSON):
 
     k,v - iterations to go through nested data dictionary structure in JSON/Dictionary format and remove
     instances where the value of a key is equal to 0 (see _missingRepresentation in dd_toJSON.py)
-    '''
+    """
 
    clean = {}
    for k, v in ddJSON.items():
