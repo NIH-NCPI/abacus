@@ -61,46 +61,62 @@ Sex:
 '''
 import yaml 
 import statistics
+import pandas as pd
+
+
 example_summary = yaml.safe_load(dummyoutput)
 
 def gensummary(datadictionary, datasetfile):
     
     # Figure out which columns are factor-like variables with allowed values
     factorCols = []
-    numberCols = [] # have to do something about integer and number values
+    numberCols = []
+    stringCols = []  # have to do something about integer and number values
     # Have to do something about string type data such as id's
-    for name in datadictionary:
-       if 'allowed' in datadictionary[name]:
-          factorCols.append(name)
 
+
+    # ('type','integer')  in ddJSON['Age at First Patient Engagement'].items()
+    # 'allowed' in ddJSON['Ethnicity'].keys()
+
+    # 'allowed' not in ddJSON['Ethnicity'].keys()
+
+    for name in datadictionary:
+       if 'allowed' in datadictionary[name].keys():
+         factorCols.append(name)
+       elif ('type', 'string') in datadictionary[name].items() and ('allowed' not in datadictionary[name].keys()):
+         stringCols.append(name)
+       elif ('type', 'integer') in datadictionary[name].items():
+         numberCols.append(name)
 
     dictionary = {}
 
     for col in datasetfile:
-        for col in factorCols:
-            elements = datasetfile[col].value_counts(dropna=False).to_dict()
-            dictionary[col]=elements
+        if col in factorCols:
+          elements = pd.value_counts(datasetfile[col]).to_dict()
+          dictionary[col]=elements
 
-            # Fill out the unused possible values with 0 counts
-            setA = list(datadictionary[col]['allowed'])
-            setB = list(datasetfile[col].unique())
-            difAB = list(set(setA).difference(setB))
+          # Fill out the unused possible values with 0 counts
+          setA = list(datadictionary[col]['allowed'])
+          setB = list(pd.unique(datasetfile[col]))
+          difAB = list(set(setA).difference(setB))
 
-            if difAB != []:
-                for p in range(len(difAB)):
-                    dictionary[col][difAB[p]] = 0
+          if difAB != []:
+              for p in range(len(difAB)):
+                 dictionary[col][difAB[p]] = 0
 
-            dictionary[col]['Total Count of Values'] = sum(dictionary[col].values())
+          dictionary[col]['Total Count of Values'] = sum(dictionary[col].values())
 
-    for col in datasetfile: 
-        for col in numberCols:
-            dictionary[col]['Min'] = min(datasetfile[col])
-            dictionary[col]['Max'] = max(datasetfile[col])
-            dictionary[col]['Median'] = statistics.median(datasetfile[col])
+        elif col in numberCols:
+          dictionary[col]['Min'] = min(datasetfile[col])
+          dictionary[col]['Max'] = max(datasetfile[col])
+          dictionary[col]['Median'] = statistics.median(datasetfile[col])
+
+        elif col in stringCols:
+          dictionary[col]=len(pd.unique(datasetfile[col]))
 
     # Write to YAML (see https://docs.google.com/document/d/1zHsyAo6d-BkjExUi-gf_MJ7zoWDcVU_GG4YlH5A1pBs/edit?usp=sharing)
 
     with open('C:/Users/ann14/dev/INCLUDE/libdd/data/summary_dat.yaml', 'w') as f:
-        yaml.dump(dictionary, f)
+       yaml.dump(dictionary, f)
 
     # print(yaml.dump(dictionary))
