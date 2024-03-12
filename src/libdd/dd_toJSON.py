@@ -27,12 +27,11 @@ def ddtoJSON(ddfile):
 
     ddfileReplaceMissing = ddfile.fillna(missingRepresentation())
     for i, row in ddfileReplaceMissing.iterrows():
-        if ddfileReplaceMissing.loc[i, 'allowed'] != 0:
-            # Former line of code below was ddfileReplaceMissing.loc[i, 'allowed'] = ddfileReplaceMissing.loc[i, 'allowed'].split(";")
-            # pdb.set_trace()
-            ddfileReplaceMissing.at[i, 'allowed'] = ddfileReplaceMissing.loc[i, 'allowed'].split(";")
-            dictionaryObject[row.name] = row.to_dict()
+        if row.allowed != 0:
+            row.allowed = row.allowed.split(";")
         else:
-            dictionaryObject[row.name] = row.to_dict()
-
+            pass
+            # row.allowed = []
+        dictionaryObject[i] = row.to_dict()
+    
     return dictionaryObject

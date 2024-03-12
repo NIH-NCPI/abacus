@@ -30,7 +30,6 @@ def validate_csv(args=None):
     dtfileJSON = dtfile.to_json(orient="records")
     dtfileParsed = json.loads(dtfileJSON)
 
-    pdb.set_trace()
     ddJSON = ddtoJSON(ddfile)
     ddJSON_clean = cleanNullTerms(ddJSON)
 
