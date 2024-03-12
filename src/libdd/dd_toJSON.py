@@ -1,5 +1,6 @@
 # for creating default empty dictionary objects
-from collections import defaultdict 
+from collections import defaultdict
+import pdb
 
 _missingRepresentation = 0
 def missingRepresentation(msng = None):
@@ -27,7 +28,9 @@ def ddtoJSON(ddfile):
     ddfileReplaceMissing = ddfile.fillna(missingRepresentation())
     for i, row in ddfileReplaceMissing.iterrows():
         if ddfileReplaceMissing.loc[i, 'allowed'] != 0:
-            ddfileReplaceMissing.loc[i, 'allowed'] = ddfileReplaceMissing.loc[i, 'allowed'].split(";")
+            # Former line of code below was ddfileReplaceMissing.loc[i, 'allowed'] = ddfileReplaceMissing.loc[i, 'allowed'].split(";")
+            # pdb.set_trace()
+            ddfileReplaceMissing.at[i, 'allowed'] = ddfileReplaceMissing.loc[i, 'allowed'].split(";")
             dictionaryObject[row.name] = row.to_dict()
         else:
             dictionaryObject[row.name] = row.to_dict()

@@ -18,6 +18,8 @@ def summarize_csv(args=None):
     dataSet - a csv format file of collected data where columns are defined in the data dictionary (it is
     assumed that the data file already conforms to the data dictionary so this series of scripts can accurately summarize
     the contents based on data types)
+
+    text- a meaningful name to be appended on the file summary_dat.yaml to indicate its derivative sources (e.g., "participant")
     
     """
     
