@@ -19,7 +19,7 @@ def summarize_csv(args=None):
     assumed that the data file already conforms to the data dictionary so this series of scripts can accurately summarize
     the contents based on data types)
 
-    text- a meaningful name to be appended on the file summary_dat.yaml to indicate its derivative sources (e.g., "participant")
+    append- a meaningful name to be appended on the file summary_dat.yaml to indicate its derivative sources (e.g., "participant")
     
     """
     
@@ -31,7 +31,7 @@ def summarize_csv(args=None):
     parser.add_argument('-dt', '--dataSet', type=FileType('rt'), required=True, 
                         help = "File to be compared to Data Dictionary")
 
-    parser.add_argument('-text', action='store', type=str, 
+    parser.add_argument('-append', '--appendToYAML', action='store', type=str, 
                         help="Provide a description of the content of the file to be appended to the output YAML file")
 
     user_args = parser.parse_args(args)
@@ -45,7 +45,7 @@ def summarize_csv(args=None):
 
     # It is expected that the data set file conforms to the data dictionary defined as ddfile
     dtfile = pandas.read_csv(user_args.dataSet.name)
-    appendToYAML = user_args.text
+    appendToYAML = user_args.append
 
     gensummary(ddJSON_clean, dtfile, appendToYAML)
 
