@@ -28,5 +28,5 @@ def gensummary(datadictionary, datasetfile, appendToYAML):
   # Write to YAML (see https://docs.google.com/document/d/1zHsyAo6d-BkjExUi-gf_MJ7zoWDcVU_GG4YlH5A1pBs/edit?usp=sharing)
 
   fileName = 'summary_dat_' + appendToYAML + '.yaml'
-  with open('C:/Users/ann14/dev/INCLUDE/libdd/data/' + fileName, 'w') as f:
+  with open('C:/Users/holmea9/OneDrive - VUMC/Documents/dev/INCLUDE/libdd/data/' + fileName, 'w') as f:
      yaml.dump(summarydata, f)

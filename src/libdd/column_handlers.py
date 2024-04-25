@@ -1,5 +1,6 @@
 import pandas as pd
 import statistics
+import pdb
 
 def summarize_factors(dictionaryToReference, datasetfile, columnName, summaryToWrite):
     """ Identify columns which are factor types and generate the following to pass into
@@ -26,7 +27,7 @@ def summarize_factors(dictionaryToReference, datasetfile, columnName, summaryToW
         for p in range(len(difAB)):
             summaryToWrite[columnName][difAB[p]] = 0
 
-    summaryToWrite[columnName]['Total Count of Values'] = sum(summaryToWrite[columnName].values())
+    summaryToWrite[columnName]['Total Count of Observations'] = sum(summaryToWrite[columnName].values())
     summaryToWrite[columnName]['Total Missing Values'] = sum(datasetfile[columnName].isnull())
 
 def summarize_numbers(datasetfile, columnName, summaryToWrite):
@@ -50,7 +51,7 @@ def summarize_numbers(datasetfile, columnName, summaryToWrite):
     summaryToWrite[columnName]['Mean'] = round(statistics.mean(datasetfile[columnName]),2)
     summaryToWrite[columnName]['Q3'] = statistics.quantiles(datasetfile[columnName], n=4)[2] # 75th percentile
     summaryToWrite[columnName]['Max'] = max(datasetfile[columnName])
-    summaryToWrite[columnName]['Total Count of Values'] = datasetfile[columnName].shape[0]
+    summaryToWrite[columnName]['Total Count of Observations'] = datasetfile[columnName].shape[0]
     summaryToWrite[columnName]['Total Missing Values'] = sum(datasetfile[columnName].isnull())
 
 def summarize_strings(datasetfile, columnName, summaryToWrite):
@@ -63,6 +64,9 @@ def summarize_strings(datasetfile, columnName, summaryToWrite):
           Total Unique Observations: ##
     """
     summaryToWrite[columnName] = {}
-    summaryToWrite[columnName]['Total Count of Values'] = datasetfile[columnName].shape[0]
-    summaryToWrite[columnName]['Total Unique Observations'] = len(pd.unique(datasetfile[columnName]))
-    summaryToWrite[columnName]['Total Missing Values'] = sum(datasetfile[columnName].isnull())
+    summaryToWrite[columnName]['Total Count of Observations'] = datasetfile[columnName].shape[0]
+    summaryToWrite[columnName]['Total Unique Observations'] = len(pd.unique(datasetfile[columnName]!=""))
+    pdb.set_trace()
+    # print(sum(datasetfile[columnName]==""))
+    # summaryToWrite[columnName]['Total Missing Values'] = sum(datasetfile[columnName].isnull())
+    summaryToWrite[columnName]['Total Missing Values'] = sum(datasetfile[columnName]=="")

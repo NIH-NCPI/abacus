@@ -3,7 +3,7 @@ from argparse import (ArgumentParser, FileType)
 # for reading in csv files
 import pandas 
 # related function to create JSON/Dictionary object
-from libdd.dd_toJSON import ddtoJSON 
+from libdd.dd_toJSON import ddtoJSON, missingRepresentation
 # related function to clean data dictionary of missing data
 from libdd.clean_dd import cleanNullTerms 
 from libdd.validation import validate_and_report
@@ -33,7 +33,8 @@ def validate_csv(args=None):
                         help="Provide the way missing values are noted in the file (provide one)") 
     
     user_args = parser.parse_args(args)
-    
+    missingRepresentation(msng= user_args.missingNotation)
+
     # Data dictionary is also expected to be in a particular format (see https://docs.google.com/document/d/1p5kIBoGf8U_axUo2ADUXQ5Mkx3zrDUJtywkZVi4sVkk/edit?usp=sharing for more info)
     ddfile = pandas.read_csv(user_args.dataDictionary.name, index_col=0)
     # It is expected that the data set file conforms to the data dictionary defined as ddfile
