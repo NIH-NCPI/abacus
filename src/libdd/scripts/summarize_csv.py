@@ -10,6 +10,7 @@ from libdd.dd_toJSON import ddtoJSON, missingRepresentation
 from libdd.clean_dd import cleanNullTerms 
 # related function to summarize data based on input ddfile and dtfile
 from libdd.summary import gensummary 
+import pdb
 
 
 def summarize_csv(args=None):
@@ -44,15 +45,13 @@ def summarize_csv(args=None):
 
     # Data dictionary is also expected to be in a particular format (see https://docs.google.com/document/d/1p5kIBoGf8U_axUo2ADUXQ5Mkx3zrDUJtywkZVi4sVkk/edit?usp=sharing for more info)
     ddfile = pandas.read_csv(user_args.dataDictionary.name, index_col=0)
-
+    # pdb.set_trace()
     ddJSON = ddtoJSON(ddfile)
-
     ddJSON_clean = cleanNullTerms(ddJSON)
-
     # It is expected that the data set file conforms to the data dictionary defined as ddfile
     dtfile = pandas.read_csv(user_args.dataSet.name, na_values= user_args.missingNotation, keep_default_na=False)
     appendToYAML = user_args.appendToYAML
-
+    
     gensummary(ddJSON_clean, dtfile, appendToYAML)
 
 if __name__ == "__main__":

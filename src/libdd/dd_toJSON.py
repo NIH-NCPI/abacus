@@ -1,6 +1,7 @@
 # for creating default empty dictionary objects
 from collections import defaultdict
 import pdb
+import math
 
 _missingRepresentation = 0
 def missingRepresentation(msng = None):
@@ -9,6 +10,10 @@ def missingRepresentation(msng = None):
         _missingRepresentation = msng
     return _missingRepresentation
 
+def checkisnan(value):
+    if type(value) is float:
+        return math.isnan(value)
+    return value == "nan"
 
 def ddtoJSON(ddfile):
     """ Convert CSV to Dictionary/JSON Format
@@ -24,14 +29,16 @@ def ddtoJSON(ddfile):
     """
 
     dictionaryObject = defaultdict(dict)
-
-    ddfileReplaceMissing = ddfile.fillna(missingRepresentation())
-    for i, row in ddfileReplaceMissing.iterrows():
-        if row.allowed != 0:
+    pdb.set_trace()
+    # ddfileReplaceMissing = ddfile.fillna(missingRepresentation())
+    for i, row in ddfile.iterrows():
+        print(row.allowed)
+        print(type(row.allowed))
+        if not checkisnan(row.allowed) and row.allowed != 0 and row.allowed.strip() != '':
+            # pdb.set_trace()
             row.allowed = row.allowed.split(";")
         else:
-            pass
-            # row.allowed = []
+            row.allowed = []
         dictionaryObject[i] = row.to_dict()
     
     return dictionaryObject

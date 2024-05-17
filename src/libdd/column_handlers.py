@@ -22,6 +22,7 @@ def summarize_factors(dictionaryToReference, datasetfile, columnName, summaryToW
     setA = list(dictionaryToReference[columnName]['allowed'])
     setB = list(pd.unique(datasetfile[columnName]))
     difAB = list(set(setA).difference(setB))
+    # pdb.set_trace()
 
     if difAB != []:
         for p in range(len(difAB)):
@@ -46,6 +47,7 @@ def summarize_numbers(datasetfile, columnName, summaryToWrite):
     """
     summaryToWrite[columnName] = {}
     summaryToWrite[columnName]['Min'] = min(datasetfile[columnName])
+    print(datasetfile[columnName])
     summaryToWrite[columnName]['Q1'] = statistics.quantiles(datasetfile[columnName], n=4)[0] # 25th percentile
     summaryToWrite[columnName]['Median'] = statistics.quantiles(datasetfile[columnName], n=4)[1] # median
     summaryToWrite[columnName]['Mean'] = round(statistics.mean(datasetfile[columnName]),2)
@@ -66,7 +68,7 @@ def summarize_strings(datasetfile, columnName, summaryToWrite):
     summaryToWrite[columnName] = {}
     summaryToWrite[columnName]['Total Count of Observations'] = datasetfile[columnName].shape[0]
     summaryToWrite[columnName]['Total Unique Observations'] = len(pd.unique(datasetfile[columnName]!=""))
-    pdb.set_trace()
+    # pdb.set_trace()
     # print(sum(datasetfile[columnName]==""))
     # summaryToWrite[columnName]['Total Missing Values'] = sum(datasetfile[columnName].isnull())
     summaryToWrite[columnName]['Total Missing Values'] = sum(datasetfile[columnName]=="")
