@@ -44,6 +44,14 @@ of validation between datasets and their data dictionaries(data expectiations).
     # example 
     summarize_csv -dd data/input/data_dictionary.csv -dt data/input/dataset.csv -m NA -e data/output/summary.yaml
     ```
+    ## validate_linkml
+    `validate_linkml` runs [linkml]("https://linkml.io/linkml/index.html") validation on a datadictionary/dataset pair and returns results of the validation in the terminal.
+    ```
+    validate_linkml -dd {path/to/datadictionary.csv} -dt {path/to/dataset.csv} -dc {data class - linkml tree_root}
+
+    # example 
+    validate_linkml -dd data/input/assay.yaml -dt data/input/assay_data.yaml -dc Assay
+    ```
 
     ## Working on a branch?
     If working on a new feature it is possible to install a package version within

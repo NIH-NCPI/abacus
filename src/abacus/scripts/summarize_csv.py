@@ -1,6 +1,13 @@
 """ 
-Write to YAML (see https://docs.google.com/document/d/1zHsyAo6d-BkjExUi-gf_MJ7zoWDcVU_GG4YlH5A1pBs/edit?usp=sharing)
+This script reads a dataset and its corresponding data dictionary, processes 
+the data, and generates a summary in YAML format(saved to a user-specified file path).
 
+For more on YAML output expectations (see 
+https://docs.google.com/document/d/1zHsyAo6d-BkjExUi-gf_MJ7zoWDcVU_GG4YlH5A1pBs/edit?usp=sharing)
+
+Data dictionary is also expected to be in a particular format (see 
+https://docs.google.com/document/d/1p5kIBoGf8U_axUo2ADUXQ5Mkx3zrDUJtywkZVi4sVkk/edit?usp=sharing 
+for more info)
 
 """
 

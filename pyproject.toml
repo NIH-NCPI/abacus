@@ -32,3 +32,4 @@ where = ["src"]  # list of folders that contain the packages (["."] by default)
 [project.scripts]
 summarize_csv = "abacus.scripts.summarize_csv:summarize_csv"
 validate_csv = "abacus.scripts.validate_csv:validate_csv"
+validate_linkml = "abacus.scripts.validate_linkml:main"
