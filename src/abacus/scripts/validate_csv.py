@@ -19,7 +19,7 @@ import cerberus
 import json
 from argparse import (ArgumentParser, FileType)
 from collections import defaultdict
-from helpers import *
+from ..helpers import *
 
 def validate_and_report(ddJSON_clean, dtfileParsed):
     """

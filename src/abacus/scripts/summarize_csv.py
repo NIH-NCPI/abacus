@@ -8,7 +8,7 @@ from argparse import (ArgumentParser, FileType)
 import pandas as pd
 import yaml
 import statistics
-from helpers import *
+from ..helpers import *
 
 
 def summarize_factors(dictionaryToReference, datasetfile, columnName, summaryToWrite):
