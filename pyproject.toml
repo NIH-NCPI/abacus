@@ -3,10 +3,10 @@ requires = ["setuptools"] #, "setuptools-scm"]
 build-backend = "setuptools.build_meta"
 
 #[tool.setuptools_scm]
-#version_file = "libdd/_version.py"
+#version_file = "abacus/_version.py"
 
 [project]
-name = "libdd"
+name = "abacus"
 authors = [
     {name = "Ann Holmes", email="ann.holmes@vumc.org"}
 ]
@@ -19,7 +19,8 @@ classifiers = [
 ]
 dependencies = ["PyYAML",
                 "rich",
-                "pandas"
+                "pandas",
+                "linkml"
                 ]
 
 dynamic = ["version"]
@@ -29,5 +30,5 @@ where = ["src"]  # list of folders that contain the packages (["."] by default)
 
 
 [project.scripts]
-summarize_csv = "libdd.scripts.summarize_csv:summarize_csv"
-validate_csv = "libdd.scripts.validate_csv:validate_csv"
+summarize_csv = "abacus.scripts.summarize_csv:summarize_csv"
+validate_csv = "abacus.scripts.validate_csv:validate_csv"
