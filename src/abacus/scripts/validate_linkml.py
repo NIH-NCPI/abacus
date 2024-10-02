@@ -1,3 +1,16 @@
+"""
+Runs linkml validation on a datadictionary/dataset pair defined in the command
+arguments. 
+
+Process:
+Places the data dictionary and required imports into a temp directory.
+ - The data dictionary must be edited to define the `tree_root` for validation
+   so a temporary copy is made and edited for this purpose.
+Runs linkml validation
+Returns the results in the terminal
+
+"""
+
 import argparse
 import yaml
 import subprocess
