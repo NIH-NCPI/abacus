@@ -23,34 +23,84 @@ of validation between datasets and their data dictionaries(data expectiations).
     pip install git+https://github.com/NIH-NCPI/abacus.git
     ```
 
-   ## Run 
+   ## Available actions:
+   * [validate_csv](#validate_csv) <br>
+   * [summarize_csv](#summarize_csv) <br> 
+   * [validate_linkml](#validate_linkml) <br>
+    
 
-    ### Run in CLI
-    Check the `.toml` file for all available commands. Most are listed here.
 
-    ## validate_csv
+   ## Commands
+    ### validate_csv
     `validate_csv` runs [cerberus]("https://docs.python-cerberus.org/index.html") validation on a datadictionary/dataset pair and returns results of the validation in the terminal. <br> 
+     [See data expectations here](#csv-validationcerberus-and-summary)
     ```
     validate_csv -dd {path/to/datadictionary.csv} -dt {path/to/dataset.csv} -m {Format of missing values in the dataset choose one (i.e. NA, na, null, ...)}   
 
     # example
     validate_csv -dd data/input/data_dictionary.csv -dt data/input/dataset.csv -m NA 
     ```
-    ## summarize_csv
-    `summarize_csv` returns aggregates and attributes of the provided dataset which is exported as a yaml file.
+    ### summarize_csv
+    `summarize_csv` returns aggregates and attributes of the provided dataset which is exported as a yaml file. <br>
+    [See data expectations here](#csv-validationcerberus-and-summary)
     ```
     summarize_csv -dd {path/to/datadictionary.csv} -dt {path/to/dataset.csv} -m {Format of missing values in the dataset choose one (i.e. NA, na, null, ...)} -e {export/filepath/summary.yaml}
 
     # example 
     summarize_csv -dd data/input/data_dictionary.csv -dt data/input/dataset.csv -m NA -e data/output/summary.yaml
     ```
-    ## validate_linkml
-    `validate_linkml` runs [linkml]("https://linkml.io/linkml/index.html") validation on a datadictionary/dataset pair and returns results of the validation in the terminal.
+    ### validate_linkml
+     
+    `validate_linkml` runs [linkml](https://linkml.io/linkml/index.html") validation on a datadictionary/dataset pair and returns results of the validation in the terminal.<br> 
+    [See data expectations here](#yaml-validationlinkml)
     ```
     validate_linkml -dd {path/to/datadictionary.csv} -dt {path/to/dataset.csv} -dc {data class - linkml tree_root}
 
     # example 
     validate_linkml -dd data/input/assay.yaml -dt data/input/assay_data.yaml -dc Assay
+    ```
+
+    ## Data Expectations
+    ### csv validation(cerberus) and summary
+    #### data dictionary format
+    [Visit this link for more indepth specs]("https://docs.google.com/document/d/1p5kIBoGf8U_axUo2ADUXQ5Mkx3zrDUJtywkZVi4sVkk/edit?usp=sharing")
+  
+    #### dataset format
+    Datasets should be csvs, follow the format described by the data dictionary, and have consitant notation of missing data [NULL, NA, etc.]. 
+
+    ## yaml validation(linkml)
+    #### data dictionary format
+    Data dictionaries should be a yaml file formatted for linkml, and contain all
+    dataset expectations for validation.
+    Validation requires all data dictionaries referenced in the `imports` section
+    present in the same file location. Imports beginning with `linkml:` can be ignored <br>
+    Example seen below.
+    ```
+    id: https://w3id.org/include/assay
+    imports:
+    - linkml:types
+    - include_core
+    - include_participant
+    - include_study
+    ```
+
+
+
+    #### dataset format
+    Datasets should be a yaml file formatted for linkml, follow the format 
+    described by the data dictionary, and have consitant notation of missing 
+    data [NULL, NA, etc.]. An example of format below.
+    ```bash
+    # Instances of Biospecimen class
+    - studyCode: "Study1"
+      participantGlobalId: "PID123"
+      ...
+
+    # Instances of DataFile class
+    - studyCode: "Study1"
+      participantGlobalId: "PID123"
+      ...
+
     ```
 
     ## Working on a branch?
