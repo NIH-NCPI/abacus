@@ -61,14 +61,14 @@ of validation between datasets and their data dictionaries(data expectiations).
     ```
 
     ## Data Expectations
-    ### csv validation(cerberus) and summary
+    ### csv - validation(cerberus) and summary
     #### data dictionary format:
     [Visit this link for more indepth specs]("https://docs.google.com/document/d/1p5kIBoGf8U_axUo2ADUXQ5Mkx3zrDUJtywkZVi4sVkk/edit?usp=sharing")
   
     #### dataset format:
     Datasets should be csvs, follow the format described by the data dictionary, and have consitant notation of missing data [NULL, NA, etc.]. 
 
-    ## yaml validation(linkml)
+    ## yaml/json - validation(linkml)
     #### data dictionary format:
     Data dictionaries should be a yaml file formatted for linkml, and contain all
     dataset expectations for validation.
@@ -85,7 +85,7 @@ of validation between datasets and their data dictionaries(data expectiations).
     ```
 
     #### dataset format:
-    Datasets should be yaml or csv file formatted for linkml, follow the format 
+    Datasets should be yaml, json or csv file formatted for linkml, follow the format 
     described by the data dictionary, and have consitant notation of missing 
     data [NULL, NA, etc.]. <br>
     <br>
@@ -108,7 +108,7 @@ of validation between datasets and their data dictionaries(data expectiations).
 
     ```
     studyCode,studyTitle,program
-    study_code,Study of Cancer,"program1|program2"
+    study_code,Study of Cancer,program1|program2
     ```
 
     ## Working on a branch?

@@ -57,7 +57,7 @@ def run_linkml_validate(ddict, dataset, dataclass):
 
     Args:
         ddict (str): Path to the LinkML schema file (YAML).
-        dataset (str): Path to the dataset file (YAML or CSV) to be validated.
+        dataset (str): Path to the dataset file (YAML, JSON) to be validated.
         dataclass (str): The target class of the validation
 
     """
@@ -78,7 +78,7 @@ def main():
     
     parser = argparse.ArgumentParser(description="Run linkml-validate with temporary tree_root modification.")
     parser.add_argument('-dd', '--dataDictionary', required=True, help='Path to the LinkML schema file (YAML).')
-    parser.add_argument('-dt', '--dataSet', required=True, help='Path to the data file (CSV or YAML) to be validated.')
+    parser.add_argument('-dt', '--dataSet', required=True, help='Path to the data file (CSV, YAML, JSON) to be validated.')
     parser.add_argument('-dc', '--dataClass', required=True, help='Target class to set as tree_root.')
 
     args = parser.parse_args()
@@ -93,11 +93,9 @@ def main():
             # Convert CSV to YAML before validation
             yaml_ds = csv_to_yaml(args.dataDictionary, args.dataSet)
             run_linkml_validate(args.dataDictionary, yaml_ds, args.dataClass)
-        elif ext.lower() == '.yaml':
-            # Directly validate the YAML dataset
-            run_linkml_validate(args.dataDictionary, args.dataSet, args.dataClass)
         else:
-            raise ValueError(f"Unsupported file type: Only CSV and YAML files are supported.")
+            # Directly validate the dataset (YAML, JSON)
+            run_linkml_validate(args.dataDictionary, args.dataSet, args.dataClass)
 
     except ValueError as e:
         print(e)  # Handle the case where the class is not found
