@@ -51,7 +51,7 @@ of validation between datasets and their data dictionaries(data expectiations).
     ```
     ### validate_linkml
      
-    `validate_linkml` runs [linkml](https://linkml.io/linkml/index.html") validation on a datadictionary/dataset pair and returns results of the validation in the terminal.<br> 
+    `validate_linkml` runs [linkml](https://linkml.io/linkml/index.html") validation on a datadictionary/dataset pair and returns results of the validation in the terminal from the directory that contains the datafiles. (datadictionary, dataset, AND iIMPORTS-adjoining datadictionaries)<br> 
     [See data expectations here](#yaml-validationlinkml)
     ```
     validate_linkml -dd {path/to/datadictionary.csv} -dt {path/to/dataset.csv} -dc {data class - linkml tree_root}
@@ -62,14 +62,14 @@ of validation between datasets and their data dictionaries(data expectiations).
 
     ## Data Expectations
     ### csv validation(cerberus) and summary
-    #### data dictionary format
+    #### data dictionary format:
     [Visit this link for more indepth specs]("https://docs.google.com/document/d/1p5kIBoGf8U_axUo2ADUXQ5Mkx3zrDUJtywkZVi4sVkk/edit?usp=sharing")
   
-    #### dataset format
+    #### dataset format:
     Datasets should be csvs, follow the format described by the data dictionary, and have consitant notation of missing data [NULL, NA, etc.]. 
 
     ## yaml validation(linkml)
-    #### data dictionary format
+    #### data dictionary format:
     Data dictionaries should be a yaml file formatted for linkml, and contain all
     dataset expectations for validation.
     Validation requires all data dictionaries referenced in the `imports` section
@@ -84,23 +84,31 @@ of validation between datasets and their data dictionaries(data expectiations).
     - include_study
     ```
 
-
-
-    #### dataset format
-    Datasets should be a yaml file formatted for linkml, follow the format 
+    #### dataset format:
+    Datasets should be yaml or csv file formatted for linkml, follow the format 
     described by the data dictionary, and have consitant notation of missing 
-    data [NULL, NA, etc.]. An example of format below.
+    data [NULL, NA, etc.]. <br>
+    <br>
+    If the dataset is a csv, multivalue fields should have pipe separators <br>
+    See examples below.
+  
     ```bash
+    # Yaml file representation
     # Instances of Biospecimen class
     - studyCode: "Study1"
       participantGlobalId: "PID123"
       ...
-
-    # Instances of DataFile class
+      ...
+      ...
     - studyCode: "Study1"
       participantGlobalId: "PID123"
-      ...
 
+    ```
+     CSV representation
+
+    ```
+    studyCode,studyTitle,program
+    study_code,Study of Cancer,"program1|program2"
     ```
 
     ## Working on a branch?
