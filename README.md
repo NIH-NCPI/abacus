@@ -10,18 +10,28 @@ of validation between datasets and their data dictionaries(data expectiations).
 
 ## Installation
 
-1. **Create and activate a virtual environment** (recommended):
+1. **Create and activate a virtual environment** (recommended):<br>
+[Here]("https://realpython.com/python-virtual-environments-a-primer/") for more on virtual environments.
+
     ```bash
-    # cd into the directory to store the venv
+    # Step 1: cd into the directory to store the venv
+
+    # Step 2: run this code. It will create the virtual env named abacus_venv in the current directory.
     python3 -m venv abacus_venv
-    source abacus_venv/bin/activate 
-    # On Windows: venv\Scripts\activate
+
+    # Step 3: run this code. It will activate the abacus_venv environment
+    source abacus_venv/bin/activate # On Windows: venv\Scripts\activate
+
+    # You are ready for installations! 
+    # If you want to deactivate the venv run:
+    deactivate
     ```
 
 2. **Install the package and dependencies**:
     ```bash
     pip install git+https://github.com/NIH-NCPI/abacus.git
     ```
+3. **Run a command/action** :diz:  
 
    ## Available actions:
    * [validate_csv](#validate_csv) <br>
