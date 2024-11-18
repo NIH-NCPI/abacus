@@ -20,7 +20,8 @@ classifiers = [
 dependencies = ["PyYAML",
                 "rich",
                 "pandas",
-                "linkml"
+                "linkml",
+                "cerberus"
                 ]
 
 dynamic = ["version"]

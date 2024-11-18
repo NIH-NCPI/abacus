@@ -8,10 +8,16 @@ The `abacus` repository includes scripts and tools that facilitate various forms
 of validation between datasets and their data dictionaries(data expectiations).
 
 
+#### TLDR/Quick start:
+* Run me: `pip install git+https://github.com/NIH-NCPI/abacus.git`
+* [Commands here](#commands)
+
 ## Installation
 
-1. **Create and activate a virtual environment** (recommended):<br>
-[Here]("https://realpython.com/python-virtual-environments-a-primer/") for more on virtual environments.
+1. **Create and activate a virtual environment** (SKIP if installing as a package):<br>
+If you want to run the scripts locally it is recoomended you use a virtual
+environment to keep the imports used siloed. This could reduce future import issues.<br>
+[Here](https://realpython.com/python-virtual-environments-a-primer/) for more on virtual environments.
 
     ```bash
     # Step 1: cd into the directory to store the venv
@@ -28,10 +34,12 @@ of validation between datasets and their data dictionaries(data expectiations).
     ```
 
 2. **Install the package and dependencies**:
+- If you have the repo cloned and attempting to run locally, this command should
+be run in the root of the repository.
     ```bash
     pip install git+https://github.com/NIH-NCPI/abacus.git
     ```
-3. **Run a command/action** :diz:  
+3. **Run a command/action** 
 
    ## Available actions:
    * [validate_csv](#validate_csv) <br>
@@ -41,6 +49,8 @@ of validation between datasets and their data dictionaries(data expectiations).
 
 
    ## Commands
+- NOTE: If you have the repo cloned and attempting to run locally, run these commands
+from abacus/src/abacus.
     ### validate_csv
     `validate_csv` runs [cerberus]("https://docs.python-cerberus.org/index.html") validation on a datadictionary/dataset pair and returns results of the validation in the terminal. <br> 
      [See data expectations here](#csv-validationcerberus-and-summary)
@@ -123,8 +133,8 @@ of validation between datasets and their data dictionaries(data expectiations).
 
     ## Working on a branch?
     If working on a new feature it is possible to install a package version within
-    the remote or local branch
-      ```
+    the remote or local branch. These commands should be run from the project root.
+    ```
     # remote
     pip install git+https://github.com/NIH-NCPI/abacus.git@{branch_name}
 
