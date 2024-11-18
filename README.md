@@ -8,6 +8,10 @@ The `abacus` repository includes scripts and tools that facilitate various forms
 of validation between datasets and their data dictionaries(data expectiations).
 
 
+#### TLDR/Quick start:
+* Run me: `pip install git+https://github.com/NIH-NCPI/abacus.git`
+* [Commands here](#commands)
+
 ## Installation
 
 1. **Create and activate a virtual environment** (SKIP if installing as a package):<br>
@@ -130,7 +134,7 @@ from abacus/src/abacus.
     ## Working on a branch?
     If working on a new feature it is possible to install a package version within
     the remote or local branch. These commands should be run from the project root.
-      ```
+    ```
     # remote
     pip install git+https://github.com/NIH-NCPI/abacus.git@{branch_name}
 
