@@ -77,7 +77,9 @@ def read_dt(ddfile, dtfile, na_values):
     return clean_data, skipped_data
 
 
-def summarize_factors(dictionaryToReference, datasetfile, columnName, summaryToWrite):
+def summarize_factors(
+    dictionaryToReference, datasetfile, columnName, summaryToWrite, missing_value
+):
     """ Identify columns which are factor types and generate the following to pass into
         YAML format:
 
@@ -103,9 +105,12 @@ def summarize_factors(dictionaryToReference, datasetfile, columnName, summaryToW
             summaryToWrite[columnName][difAB[p]] = 0
 
     summaryToWrite[columnName]['Total Count of Observations'] = sum(summaryToWrite[columnName].values())
-    summaryToWrite[columnName]['Total Missing Values'] = sum(datasetfile[columnName].isnull())
+    summaryToWrite[columnName][f"Total Missing Values({missing_value})"] = sum(
+        datasetfile[columnName].isnull()
+    )
 
-def summarize_numbers(datasetfile, columnName, summaryToWrite):
+
+def summarize_numbers(datasetfile, columnName, summaryToWrite, missing_value):
     """ Identify columns which are numerical and generate the following to pass into
         YAML format:
 
@@ -127,9 +132,12 @@ def summarize_numbers(datasetfile, columnName, summaryToWrite):
     summaryToWrite[columnName]['Q3'] = statistics.quantiles(datasetfile[columnName], n=4)[2] # 75th percentile
     summaryToWrite[columnName]['Max'] = max(datasetfile[columnName])
     summaryToWrite[columnName]['Total Count of Observations'] = datasetfile[columnName].shape[0]
-    summaryToWrite[columnName]['Total Missing Values'] = sum(datasetfile[columnName].isnull())
+    summaryToWrite[columnName][f"Total Missing Values({missing_value})"] = sum(
+        datasetfile[columnName].isnull()
+    )
 
-def gensummary(datadictionary, datasetfile, filepath):
+
+def gensummary(datadictionary, datasetfile, filepath, skipped_rows, missing_value):
     # Figure out which columns are factor-like variables with allowed values
     factorCols = []
     numberCols = []
@@ -140,23 +148,42 @@ def gensummary(datadictionary, datasetfile, filepath):
             factorCols.append(name)
         elif ('type', 'string') in datadictionary[name].items() and ('allowed' not in datadictionary[name].keys()):
             stringCols.append(name)
-        elif ('type', 'integer') in datadictionary[name].items():
+        elif (
+            ("type", "integer") in datadictionary[name].items()
+            or ("type", "float") in datadictionary[name].items()
+            or ("type", "number") in datadictionary[name].items()
+        ):
             numberCols.append(name)
 
     summarydata = {}
 
+    # Sanity check
+    print(f"Factor columns:                 {factorCols}")
+    print(f"Number/integer/float columns:   {numberCols}")
+    print(f"String columns:                 {stringCols}")
+
     for col in datasetfile.columns:
         if col in factorCols:
-            summarize_factors(datadictionary, datasetfile, col, summarydata)
+            summarize_factors(
+                datadictionary, datasetfile, col, summarydata, missing_value
+            )
         elif col in numberCols:
-            summarize_numbers(datasetfile, col, summarydata)
+            summarize_numbers(datasetfile, col, summarydata, missing_value)
         elif col in stringCols:
-            summarize_strings(datasetfile, col, summarydata)
+            summarize_strings(datasetfile, col, summarydata, missing_value)
+
+    n_skipped = len(skipped_rows)
+    summarydata["skipped"] = (
+        f"Number of rows that could not be imported as the defined dtype {n_skipped}"
+    )
 
     with open(filepath, 'w') as f:
         yaml.dump(summarydata, f)
 
-def summarize_strings(datasetfile, columnName, summaryToWrite):
+    print(f"Job complete. The summary was exported to: {filepath}")
+
+
+def summarize_strings(datasetfile, columnName, summaryToWrite, missing_value):
     """ Identify columns which are string type and generate the following to pass into
         YAML format:
 
@@ -171,7 +198,10 @@ def summarize_strings(datasetfile, columnName, summaryToWrite):
     # pdb.set_trace()
     # print(sum(datasetfile[columnName]==""))
     # summaryToWrite[columnName]['Total Missing Values'] = sum(datasetfile[columnName].isnull())
-    summaryToWrite[columnName]['Total Missing Values'] = sum(datasetfile[columnName]=="")
+    summaryToWrite[columnName][f"Total Missing Values({missing_value})"] = sum(
+        datasetfile[columnName] == ""
+    )
+
 
 def summarize_csv(args=None):
     """Based on user input, load the data dictionary and data set file into memory and summarize.
@@ -221,7 +251,7 @@ def summarize_csv(args=None):
     # Set the file description to be added to the exported summary filename
     filepath = user_args.exportFilepath
     # Generate the summary and export to the configured location
-    gensummary(ddJSON, dtfile, filepath)
+    gensummary(ddJSON, dtfile, filepath, skipped_rows, user_args.missingNotation)
 
 if __name__ == "__main__":
     summarize_csv()
