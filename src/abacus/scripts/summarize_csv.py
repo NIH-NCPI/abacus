@@ -18,6 +18,65 @@ import statistics
 from ..helpers import *
 
 
+def read_dt(ddfile, dtfile, na_values):
+    """Reads the dataset (dtfile) and handles type conversion errors gracefully."""
+    # Map columns to types based on the data dictionary
+
+    dd_specified_types = {}
+    for _, row in ddfile.iterrows():
+        col_name = row.loc[ddfile.columns[0]]
+        col_type = row.loc[ddfile.columns[1]]
+
+        if col_type in ["int", "integer"]:
+            dd_specified_types[col_name] = "Int64"  # Nullable Int type in pandas
+        elif col_type in ["float", "number"]:
+            dd_specified_types[col_name] = "float64"
+        elif col_type in ["string"]:
+            dd_specified_types[col_name] = "string"
+
+    # Read raw data from CSV
+    raw_dtfile = pd.read_csv(dtfile, na_values=na_values, keep_default_na=False)
+
+    formatted_dtfile = raw_dtfile.copy()
+    skipped_data = pd.DataFrame()
+
+    for col, dtype in dd_specified_types.items():
+        if col not in formatted_dtfile.columns:
+            print(f"Column {col} from data dictionary not found in dataset.")
+            continue
+
+        try:
+            # Attempt to convert column to the specified dtype
+            if dtype == "string":
+                formatted_dtfile[col] = (
+                    formatted_dtfile[col].astype(str).replace("nan", "")
+                )
+            elif dtype == "Int64" or dtype == "float64":
+                formatted_dtfile[col] = pd.to_numeric(
+                    formatted_dtfile[col], errors="coerce"
+                )
+            else:
+                formatted_dtfile[col] = formatted_dtfile[col].astype(dtype)
+        except Exception as e:
+            print(
+                f"Error during type conversion for column '{col}' to dtype '{dtype}': {e}"
+            )
+            problematic_rows = formatted_dtfile[[col]].copy()
+            skipped_data = pd.concat(
+                [skipped_data, problematic_rows], ignore_index=True
+            )
+            formatted_dtfile[col] = pd.to_numeric(
+                formatted_dtfile[col], errors="coerce"
+            )
+
+    # Log and return clean data
+    clean_data = formatted_dtfile[
+        ~formatted_dtfile.index.isin(skipped_data.index)
+    ].reset_index(drop=True)
+
+    return clean_data, skipped_data
+
+
 def summarize_factors(dictionaryToReference, datasetfile, columnName, summaryToWrite):
     """ Identify columns which are factor types and generate the following to pass into
         YAML format:
@@ -86,7 +145,7 @@ def gensummary(datadictionary, datasetfile, filepath):
 
     summarydata = {}
 
-    for col in datasetfile:
+    for col in datasetfile.columns:
         if col in factorCols:
             summarize_factors(datadictionary, datasetfile, col, summarydata)
         elif col in numberCols:
@@ -126,7 +185,7 @@ def summarize_csv(args=None):
     append- a meaningful name to be appended on the file summary_dat.yaml to indicate its derivative sources (e.g., "participant")
     
     """
-    
+
     parser = ArgumentParser(prog='Application', description='pass the arguments to open a file')
 
     parser.add_argument('-dd', '--dataDictionary', type=FileType('rt'), required=True, 
@@ -134,7 +193,7 @@ def summarize_csv(args=None):
 
     parser.add_argument('-dt', '--dataSet', type=FileType('rt'), required=True, 
                         help = "Dataset to be compaired, filepath(including filename)")
-    
+
     parser.add_argument('-m', '--missingNotation', action='store', type=str, 
                         help="Provide the way missing values are noted in the file (provide one)")
 
@@ -151,14 +210,16 @@ def summarize_csv(args=None):
     ddfile = pd.read_csv(user_args.dataDictionary.name, index_col=0)
 
     # Read the dataset CSV into a dataframe, replacing the provided missing notation
-    dtfile = pd.read_csv(user_args.dataSet.name, na_values= user_args.missingNotation, keep_default_na=False)
-
+    dtfile, skipped_rows = read_dt(
+        ddfile,
+        dtfile=user_args.dataSet.name,
+        na_values=user_args.missingNotation,
+    )
     # Convert the data dictionary into a parsable format
     ddJSON = ddtoJSON(ddfile)
 
     # Set the file description to be added to the exported summary filename
     filepath = user_args.exportFilepath
- 
     # Generate the summary and export to the configured location
     gensummary(ddJSON, dtfile, filepath)
 
