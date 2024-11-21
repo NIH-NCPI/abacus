@@ -16,6 +16,7 @@ import pandas as pd
 import yaml
 import statistics
 from ..helpers import *
+import pdb
 
 
 def read_dt(ddfile, dtfile, na_values):
@@ -148,11 +149,7 @@ def gensummary(datadictionary, datasetfile, filepath, skipped_rows, missing_valu
             factorCols.append(name)
         elif ('type', 'string') in datadictionary[name].items() and ('allowed' not in datadictionary[name].keys()):
             stringCols.append(name)
-        elif (
-            ("type", "integer") in datadictionary[name].items()
-            or ("type", "float") in datadictionary[name].items()
-            or ("type", "number") in datadictionary[name].items()
-        ):
+        elif (("type", "integer") in datadictionary[name].items() or ("type", "float") in datadictionary[name].items() or ("type", "number") in datadictionary[name].items()):
             numberCols.append(name)
 
     summarydata = {}
@@ -194,13 +191,11 @@ def summarize_strings(datasetfile, columnName, summaryToWrite, missing_value):
     """
     summaryToWrite[columnName] = {}
     summaryToWrite[columnName]['Total Count of Observations'] = datasetfile[columnName].shape[0]
-    summaryToWrite[columnName]['Total Unique Observations'] = len(pd.unique(datasetfile[columnName]!=""))
+  
+    summaryToWrite[columnName]['Total Unique Observations'] = datasetfile[columnName].nunique(dropna = True)
     # pdb.set_trace()
     # print(sum(datasetfile[columnName]==""))
-    # summaryToWrite[columnName]['Total Missing Values'] = sum(datasetfile[columnName].isnull())
-    summaryToWrite[columnName][f"Total Missing Values({missing_value})"] = sum(
-        datasetfile[columnName] == ""
-    )
+    summaryToWrite[columnName][f"Total Missing Values({missing_value})"] = datasetfile[columnName].isnull().sum()
 
 
 def summarize_csv(args=None):
