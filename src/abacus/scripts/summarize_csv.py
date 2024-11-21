@@ -17,66 +17,6 @@ import yaml
 import statistics
 from ..helpers import *
 
-
-def read_dt(ddfile, dtfile, na_values):
-    """Reads the dataset (dtfile) and handles type conversion errors gracefully."""
-    # Map columns to types based on the data dictionary
-
-    dd_specified_types = {}
-    for _, row in ddfile.iterrows():
-        col_name = row.loc[ddfile.columns[0]]
-        col_type = row.loc[ddfile.columns[1]]
-
-        if col_type in ["int", "integer"]:
-            dd_specified_types[col_name] = "Int64"  # Nullable Int type in pandas
-        elif col_type in ["float", "number"]:
-            dd_specified_types[col_name] = "float64"
-        elif col_type in ["string"]:
-            dd_specified_types[col_name] = "string"
-
-    # Read raw data from CSV
-    raw_dtfile = pd.read_csv(dtfile, na_values=na_values, keep_default_na=False)
-
-    formatted_dtfile = raw_dtfile.copy()
-    skipped_data = pd.DataFrame()
-
-    for col, dtype in dd_specified_types.items():
-        if col not in formatted_dtfile.columns:
-            print(f"Column {col} from data dictionary not found in dataset.")
-            continue
-
-        try:
-            # Attempt to convert column to the specified dtype
-            if dtype == "string":
-                formatted_dtfile[col] = (
-                    formatted_dtfile[col].astype(str).replace("nan", "")
-                )
-            elif dtype == "Int64" or dtype == "float64":
-                formatted_dtfile[col] = pd.to_numeric(
-                    formatted_dtfile[col], errors="coerce"
-                )
-            else:
-                formatted_dtfile[col] = formatted_dtfile[col].astype(dtype)
-        except Exception as e:
-            print(
-                f"Error during type conversion for column '{col}' to dtype '{dtype}': {e}"
-            )
-            problematic_rows = formatted_dtfile[[col]].copy()
-            skipped_data = pd.concat(
-                [skipped_data, problematic_rows], ignore_index=True
-            )
-            formatted_dtfile[col] = pd.to_numeric(
-                formatted_dtfile[col], errors="coerce"
-            )
-
-    # Log and return clean data
-    clean_data = formatted_dtfile[
-        ~formatted_dtfile.index.isin(skipped_data.index)
-    ].reset_index(drop=True)
-
-    return clean_data, skipped_data
-
-
 def summarize_factors(
     dictionaryToReference, datasetfile, columnName, summaryToWrite, missing_value
 ):
