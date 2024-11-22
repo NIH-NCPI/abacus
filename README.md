@@ -52,7 +52,7 @@ be run in the root of the repository.
 - NOTE: If you have the repo cloned and attempting to run locally, run these commands
 from abacus/src/abacus.
     ### validate_csv
-    `validate_csv` runs [cerberus]("https://docs.python-cerberus.org/index.html") validation on a datadictionary/dataset pair and returns results of the validation in the terminal. <br> 
+    `validate_csv` runs [cerberus](https://docs.python-cerberus.org/index.html) validation on a datadictionary/dataset pair and returns results of the validation in the terminal. <br> 
      [See data expectations here](#csv-validationcerberus-and-summary)
     ```
     validate_csv -dd {path/to/datadictionary.csv} -dt {path/to/dataset.csv} -m {Format of missing values in the dataset choose one (i.e. NA, na, null, ...)}   
@@ -83,7 +83,7 @@ from abacus/src/abacus.
     ## Data Expectations
     ### csv - validation(cerberus) and summary
     #### data dictionary format:
-    [Visit this link for more indepth specs]("https://docs.google.com/document/d/1p5kIBoGf8U_axUo2ADUXQ5Mkx3zrDUJtywkZVi4sVkk/edit?usp=sharing")
+    [Visit this link for more indepth specs](https://docs.google.com/document/d/1p5kIBoGf8U_axUo2ADUXQ5Mkx3zrDUJtywkZVi4sVkk/edit?usp=sharing)
   
     #### dataset format:
     Datasets should be csvs, follow the format described by the data dictionary, and have consitant notation of missing data [NULL, NA, etc.]. 
@@ -140,4 +140,10 @@ from abacus/src/abacus.
 
     # local
     pip install -e .
+
+    # handy troubleshooting commands when unsure of version.
+    pip install --upgrade abacus
+    pip install --upgrade abacus==2.0.0
+    pip uninstall abacus -y
+
     ```
