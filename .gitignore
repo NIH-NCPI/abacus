@@ -1,5 +1,6 @@
 # local ignore
 data
+csvs
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
