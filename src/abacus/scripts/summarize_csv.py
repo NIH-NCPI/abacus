@@ -135,7 +135,6 @@ def summarize_strings(datasetfile, columnName, summaryToWrite, missing_value):
     summaryToWrite[columnName]['Total Unique Observations'] = datasetfile[columnName].nunique(dropna = True)
     # pdb.set_trace()
     # print(sum(datasetfile[columnName]==""))
-    pdb.set_trace()
     summaryToWrite[columnName][f"Total Missing Values ({missing_value})"] = int(datasetfile[columnName].isnull().sum())
 
 
