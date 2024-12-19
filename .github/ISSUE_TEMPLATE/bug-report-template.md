@@ -2,7 +2,7 @@
 name: Bug Report Template
 about: Report a specific issue or problem with the FHIR IG modules
 title: "Bug - [Brief Descr.]"
-assignees: JamedFV
+assignees: a-l-holmes
 labels: 'bug'
 
 ---
