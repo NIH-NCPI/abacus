@@ -21,7 +21,8 @@ dependencies = ["PyYAML",
                 "rich",
                 "pandas",
                 "linkml",
-                "cerberus"
+                "cerberus",
+                "deva @ git+https://github.com/brendagutman/validator.git"
                 ]
 
 dynamic = ["version"]
