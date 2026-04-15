@@ -45,6 +45,8 @@ be run in the root of the repository.
    * [validate_csv](#validate_csv) <br>
    * [summarize_csv](#summarize_csv) <br> 
    * [validate_linkml](#validate_linkml) <br>
+   * [validate_dd](#validate_dd) <br>
+   * [validate_df](#validate_df) <br>
     
 
 
@@ -79,6 +81,25 @@ from abacus/src/abacus.
     # example 
     validate_linkml -dd data/input/assay.yaml -dt data/input/assay_data.yaml -dc Assay
     ```
+
+    ### validate_dd
+    `validate_dd` validates a data dictionary CSV against a named schema (provided by the [pre-pipeline-validator](https://github.com/carrollaboratory/pre-pipeline-validator) package). Each row in the data dictionary is checked for correct formatting, required fields, valid data types, and numeric constraint usage. Results are written to a CSV report.
+    ```
+    validate_dd <tgt_schema> <data_dictionary_path> <output_csv_path>
+
+    # example
+    validate_dd example_data_dictionary data/input/my_data_dictionary.csv data/output/dd_validation_results.csv
+    ```
+
+    ### validate_df
+    `validate_df` validates a data file CSV against a data dictionary. The schema is built dynamically from the data dictionary and checks column presence, data types, allowed values, numeric ranges, and required field completeness.
+    ```
+    validate_df <data_dictionary_path> <datafile_path> <output_csv_path>
+
+    # example
+    validate_df data/input/my_data_dictionary.csv data/input/my_datafile.csv data/output/df_validation_results.csv
+    ```
+    > **Note:** Data files should not be validated against a failing data dictionary.
 
     ## Data Expectations
     ### csv - validation(cerberus) and summary
