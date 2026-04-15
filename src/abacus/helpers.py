@@ -6,7 +6,7 @@ import pandas as pd
 from collections import defaultdict
 import statistics
 
- # Sets default missing notation. Will be used if none set by the user.
+# Sets default missing notation. Will be used if none set by the user.
 _missingRepresentation = 0
 
 def missingRepresentation(msng = None):
@@ -67,3 +67,63 @@ def ddtoJSON(ddfile):
 
     return dictionaryObject
 
+
+def read_dt(ddfile, dtfile, na_values):
+    """Reads the dataset and sets the columns to the dtype specified by 
+    the ddfile. If a record is not able to be set to the dtype the record
+    will be counted as a 'skipped' record."""
+
+    dd_specified_types = {}
+    for col_name, row in ddfile.iterrows():
+        col_type = row["type"]
+
+        if col_type in ["int", "integer"]:
+            dd_specified_types[col_name] = "Int64"
+        elif col_type in ["float", "number"]:
+            dd_specified_types[col_name] = "float64"
+        elif col_type == "string":
+            dd_specified_types[col_name] = "string"
+        else:
+            dd_specified_types[col_name] = "object"
+
+    # Read raw data from CSV
+    raw_dtfile = pd.read_csv(dtfile, na_values=na_values, keep_default_na=False)
+
+    formatted_dtfile = raw_dtfile.copy()
+    skipped_data = pd.DataFrame()
+
+    for col, dtype in dd_specified_types.items():
+        if col not in formatted_dtfile.columns:
+            print(f"Column {col} from data dictionary not found in dataset.")
+            continue
+
+        try:
+            # Attempt to convert column to the specified dtype
+            if dtype == "string":
+                formatted_dtfile[col] = formatted_dtfile[col].astype("string")
+                message = col
+            elif dtype == "Int64" or dtype == "float64":
+                formatted_dtfile[col] = pd.to_numeric(
+                    formatted_dtfile[col], errors="coerce"
+                )
+            else:
+                formatted_dtfile[col] = formatted_dtfile[col].astype(dtype)
+
+        except Exception as e:
+            print(
+                f"Error during type conversion for column '{col}' to dtype '{dtype}': {e}"
+            )
+            problematic_rows = formatted_dtfile[[col]].copy()
+            skipped_data = pd.concat(
+                [skipped_data, problematic_rows], ignore_index=True
+            )
+            formatted_dtfile[col] = pd.to_numeric(
+                formatted_dtfile[col], errors="coerce"
+            )
+
+    # Log and return clean data
+    clean_data = formatted_dtfile[
+        ~formatted_dtfile.index.isin(skipped_data.index)
+    ].reset_index(drop=True)
+
+    return clean_data, skipped_data

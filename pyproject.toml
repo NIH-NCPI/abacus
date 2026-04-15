@@ -19,7 +19,7 @@ classifiers = [
 ]
 dependencies = ["PyYAML",
                 "rich",
-                "pandas",
+                "pandas ~=2.2.0",
                 "linkml",
                 "cerberus",
                 "pre_pipeline_validator @ git+https://github.com/carrollaboratory/pre-pipeline-validator"

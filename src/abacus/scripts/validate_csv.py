@@ -72,19 +72,19 @@ def validate_csv(args=None):
               or printing errors for rows that do not conform to the data dictionary.
     """
     parser = ArgumentParser(prog='Application')
-    
+
     parser.add_argument('-dd', '--dataDictionary', type=FileType('rt'), required=True, 
                         help="Data Dictionary filepath(including filename)")
 
     parser.add_argument('-dt', '--dataSet', type=FileType('rt'), required=True, 
                         help = "Dataset to be compaired, filepath(including filename)")
-    
+
     parser.add_argument('-m', '--missingNotation', action='store', type=str, 
                         help="Provide the way missing values are noted in the file (provide one)") 
-    
+
     # Parse the provided arguments
     user_args = parser.parse_args(args)
-    
+
     # Set the global missing value representation
     missingRepresentation(msng= user_args.missingNotation)
 
@@ -92,7 +92,11 @@ def validate_csv(args=None):
     ddfile = pd.read_csv(user_args.dataDictionary.name, index_col=0)
 
     # Read the dataset CSV into a dataframe, replacing the provided missing notation
-    dtfile = pd.read_csv(user_args.dataSet.name, na_values= user_args.missingNotation, keep_default_na=False)
+    dtfile, skipped_rows = read_dt(
+        ddfile,
+        dtfile=user_args.dataSet.name,
+        na_values=user_args.missingNotation,
+    )
 
     # Convert dataset into a format parsable by the data validator
     dtfileJSON = dtfile.to_json(orient="records")
@@ -103,6 +107,11 @@ def validate_csv(args=None):
 
     # Run the validator and print results
     validate_and_report(ddJSON, dtfileParsed)
+
+    # Print info on the skipped records
+    print(
+        f"Number of rows that could not be set as their columns dtype: {len(skipped_rows)}"
+    )
 
 if __name__ == "__main__":
     validate_csv()
